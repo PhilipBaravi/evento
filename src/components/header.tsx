@@ -1,9 +1,15 @@
+"use client";
+
 import { FC, Fragment } from "react";
 import Link from "next/link";
 import Logo from "./logo";
 import { Route } from "@/types/routes";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 const Header: FC = () => {
+  const activePathname = usePathname();
+
   const routes: Route[] = [
     {
       id: 1,
@@ -12,8 +18,8 @@ const Header: FC = () => {
     },
     {
       id: 2,
-      name: "Events",
-      path: "/events",
+      name: "All Events",
+      path: "/events/all",
     },
   ];
 
@@ -21,13 +27,23 @@ const Header: FC = () => {
     <header className="flex justify-between items-center border-b border-white/10 h-14 px-3 sm:px-9">
       <Logo />
 
-      <nav>
-        <ul className="flex gap-x-6 text-sm">
+      <nav className="h-full">
+        <ul className="flex gap-x-6 h-full text-sm">
           {routes.map((el) => {
             return (
               <Fragment key={el.id}>
-                <li className="text-white/50 hover:text-white transition">
+                <li
+                  className={`${
+                    activePathname === el.path ? "text-white" : "text-white/50"
+                  } hover:text-white transition relative flex items-center`}
+                >
                   <Link href={el.path}>{el.name}</Link>
+                  {activePathname === el.path && (
+                    <motion.div
+                      layoutId="header-active-link"
+                      className="bg-accent h-1 w-full absolute bottom-0"
+                    ></motion.div>
+                  )}{" "}
                 </li>
               </Fragment>
             );

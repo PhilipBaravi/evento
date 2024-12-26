@@ -10,8 +10,15 @@ type EventPageProps = {
 
 const EventPage: FC<EventPageProps> = async ({ params }) => {
   const { slug } = await params;
+
   const response = await fetch(
-    `https://bytegrad.com/course-assets/projects/evento/api/events/${slug}`
+    `https://bytegrad.com/course-assets/projects/evento/api/events/${slug}`,
+    {
+      cache: "force-cache",
+      next: {
+        revalidate: 600,
+      },
+    }
   );
   const event = await response.json();
   console.log(event);
@@ -49,15 +56,40 @@ const EventPage: FC<EventPageProps> = async ({ params }) => {
             <p className="whitespace-nowrap text-xl text-white/75">
               Organized by <span className="italic">{event.organizerName}</span>
             </p>
-            <button className="lg:mt-auto bg-white/20 text-lg capitalize sm:w-full py-2 rounded-md border-white/10 border-2 bg-blur mt-5 hover:scale-105 active:scale-[1.02] transition focus:scale-105">
+            <button className="lg:mt-auto bg-white/20 text-lg capitalize sm:w-full py-2 rounded-md border-white/10 border-2 bg-blur mt-5 state-effects">
               Get tickets
             </button>
           </div>
         </div>
       </section>
-      <div></div>
+      <div className="min-h-[75vh] text-center px-5 py-16">
+        <Section>
+          <SectionHeading>About this event</SectionHeading>
+          <SectionContent>{event.description}</SectionContent>
+        </Section>
+
+        <Section>
+          <SectionHeading>Location</SectionHeading>
+          <SectionContent>{event.location}</SectionContent>
+        </Section>
+      </div>
     </main>
   );
 };
 
 export default EventPage;
+
+const Section = ({ children }: { children: React.ReactNode }) => {
+  return <section className="mb-12">{children}</section>;
+};
+const SectionHeading = ({ children }: { children: React.ReactNode }) => {
+  return <h2 className="text-2xl mb-8">{children}</h2>;
+};
+
+const SectionContent = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <p className="max-w-4xl mx-auto text-lg leading-8 text-white/75">
+      {children}
+    </p>
+  );
+};

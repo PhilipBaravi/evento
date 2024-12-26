@@ -3,10 +3,11 @@ import { EventoEvent } from "@/types/event";
 import EventCard from "./event-card";
 
 type EventsListProps = {
+  city: string;
   events: EventoEvent[];
 };
 
-const EventsList: FC<EventsListProps> = ({ events }) => {
+const EventsList: FC<EventsListProps> = ({ city, events }) => {
   return (
     <section className="flex flex-wrap gap-10 justify-center max-w-[1100px] px-[20px]">
       {events.map((event) => {
